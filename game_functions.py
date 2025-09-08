@@ -143,7 +143,8 @@ def create_random_alien(ai_settings, screen, aliens):
      alien = Alien(ai_settings, screen)
      alien_width = alien.rect.width
      number_aliens_x = get_number_aliens_x(ai_settings, alien_width)
-     random_numbers = random.sample(range(0, number_aliens_x), 3)
+     alien_num=random.randint(0, number_aliens_x - 1)
+     random_numbers = random.sample(range(0, number_aliens_x), alien_num)
      for alien_location in random_numbers:
           create_alien(ai_settings, screen, aliens, alien_location)
 
@@ -180,7 +181,20 @@ def update_aliens(ai_settings, stats, screen, ship, aliens,bullets,sb):
     '''Update the positions of all aliens in the fleet.'''
     check_fleet_edges(ai_settings, aliens)
     aliens.update()  #这里的Group用了alien的方法
-    create_random_alien(ai_settings, screen, aliens)
+    # if aliens:  # 确保已有外星人时才生成新行
+    #     # 找到当前最上方外星人的y坐标
+    #     min_y = min(alien.rect.y for alien in aliens.sprites())
+    #     # 当最上方外星人下降超过自身高度时，生成新行
+    #     if min_y > aliens.rect.height:
+    #         create_random_alien(ai_settings, screen, aliens)
+
+    add_alien_flag = 1
+    for alien in aliens.sprites():
+        if alien.y < 2 * alien.rect.height:
+            add_alien_flag = 0
+    if add_alien_flag == 1:
+        create_random_alien(ai_settings, screen, aliens)
+
     if pygame.sprite.spritecollideany(ship, aliens):
         print("Ship hit!")
         ship_hit(ai_settings, stats, screen, ship, aliens, bullets, sb)
@@ -201,7 +215,7 @@ def change_fleet_direction(ai_settings, aliens):
 
 def change_alien_direction(ai_settings,alien):
      '''change a alien's way'''
-     alien.rect.y += ai_settings.fleet_drop_speed
+     
      ai_settings.fleet_direction *= -1
 
 def ship_hit(ai_settings, stats, screen, ship, aliens, bullets,sb):

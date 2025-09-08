@@ -17,13 +17,15 @@ class Settings:
         self.bullets_allowed = 5
 
         '''Alien settings.'''
-        self.alien_speed_factor = 1
+        self.alien_speed_factor = 0.5
         self.fleet_drop_speed = 10
         # fleet_direction of 1 represents right; -1 represents left.
         self.fleet_direction = 1
 
-        self.speedup_scale = 1.1
+        self.speedup_scale = 1.05
         self.score_scale = 1.5
+
+        self.alien_drop_interval = 500  # 每 秒下降一次
 
         self.initialize_dynamic_settings()
 
@@ -31,7 +33,7 @@ class Settings:
         '''Initialize settings that change throughout the game.'''
         self.ship_speed = 1.5
         self.bullet_speed_factor = 3
-        self.alien_speed_factor = 1
+        self.alien_speed_factor = 0.5
 
         # Scoring
         self.alien_points = 50
