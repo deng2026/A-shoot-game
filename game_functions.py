@@ -1,4 +1,5 @@
 import sys
+import random
 from time import sleep
 import pygame
 from bullet import Bullet
@@ -68,7 +69,7 @@ def check_play_button(ai_settings, stats, screen, ship, aliens,bullets, play_but
         # Create a new fleet of aliens. 
         aliens.empty()
         bullets.empty()
-        create_fleet(ai_settings, screen, aliens, ship)
+        #create_fleet(ai_settings, screen, aliens, ship)
         ship.center_ship()
 
 def update_screen(ai_settings,screen, ship, bullets, aliens, play_button,stats,sb):
@@ -114,7 +115,7 @@ def check_bullet_alien_collisions(ai_settings, screen, ship, bullets, aliens,sb,
         stats.level += 1
         sb.prep_level()
         # Create a new fleet of aliens.
-        create_fleet(ai_settings, screen, aliens, ship)
+        #create_fleet(ai_settings, screen, aliens, ship)
 
 
 
@@ -137,6 +138,16 @@ def create_fleet(ai_settings, screen, aliens,ship):
         for alien_number in range(number_aliens_x):
             create_alien(ai_settings, screen, aliens, alien_number,row_number)
 
+def create_random_alien(ai_settings, screen, aliens):
+     '''creat a row random alien'''
+     alien = Alien(ai_settings, screen)
+     alien_width = alien.rect.width
+     number_aliens_x = get_number_aliens_x(ai_settings, alien_width)
+     random_numbers = random.sample(range(0, number_aliens_x), 3)
+     for alien_location in random_numbers:
+          create_alien(ai_settings, screen, aliens, alien_location)
+
+
 def get_number_aliens_x(ai_settings, alien_width):
     available_space_x = ai_settings.screen_width - (2 * alien_width)
     number_aliens_x = available_space_x // (2 * alien_width)
@@ -148,7 +159,7 @@ def get_number_rows(ai_settings,ship_height,alien_height):
      number_rows=int(available_space_y/(2*alien_height))
      return number_rows
 
-def create_alien(ai_settings, screen, aliens, alien_number,row_number):
+def create_alien(ai_settings, screen, aliens, alien_number,row_number=0):
     '''Create a single alien and place it in the fleet.'''
     alien = Alien(ai_settings, screen)
     alien.x = alien.rect.width + 2 * alien.rect.width * alien_number
@@ -168,8 +179,8 @@ def check_aliens_bottom(ai_settings,stats,screen,ship,aliens, bullets, sb):
 def update_aliens(ai_settings, stats, screen, ship, aliens,bullets,sb):
     '''Update the positions of all aliens in the fleet.'''
     check_fleet_edges(ai_settings, aliens)
-    aliens.update()
-    ''''''
+    aliens.update()  #这里的Group用了alien的方法
+    create_random_alien(ai_settings, screen, aliens)
     if pygame.sprite.spritecollideany(ship, aliens):
         print("Ship hit!")
         ship_hit(ai_settings, stats, screen, ship, aliens, bullets, sb)
@@ -179,14 +190,19 @@ def check_fleet_edges(ai_settings, aliens):
     '''Respond appropriately if any aliens have reached an edge.'''
     for alien in aliens.sprites():
         if alien.check_edges():
-            change_fleet_direction(ai_settings, aliens)
-            break
+            change_alien_direction(ai_settings, alien)
+            # break
 
 def change_fleet_direction(ai_settings, aliens):
     '''Drop the entire fleet and change the fleet's direction.'''
     for alien in aliens.sprites():
         alien.rect.y += ai_settings.fleet_drop_speed
     ai_settings.fleet_direction *= -1
+
+def change_alien_direction(ai_settings,alien):
+     '''change a alien's way'''
+     alien.rect.y += ai_settings.fleet_drop_speed
+     ai_settings.fleet_direction *= -1
 
 def ship_hit(ai_settings, stats, screen, ship, aliens, bullets,sb):
     '''Respond to ship being hit by alien.'''
@@ -199,7 +215,7 @@ def ship_hit(ai_settings, stats, screen, ship, aliens, bullets,sb):
         aliens.empty()
         bullets.empty()
 
-        create_fleet(ai_settings, screen, aliens, ship)
+        #create_fleet(ai_settings, screen, aliens, ship)
         ship.center_ship()
 
         sleep(0.5)

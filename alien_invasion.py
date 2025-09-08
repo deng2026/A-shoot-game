@@ -15,12 +15,13 @@ def run_game():
     ai_settings = Settings()
     screen = pygame.display.set_mode((ai_settings.screen_width, ai_settings.screen_height))
     ship = Ship(ai_settings, screen)
-    bullets = pygame.sprite.Group()
-    aliens = pygame.sprite.Group()
     stats = GameStats(ai_settings)
     sb = Scoreboard(ai_settings, screen, stats)
+    bullets = pygame.sprite.Group()
+    aliens = pygame.sprite.Group()
 
-    gf.create_fleet(ai_settings, screen, aliens,ship)
+    #gf.create_fleet(ai_settings, screen, aliens, ship)
+    gf.create_random_alien(ai_settings, screen, aliens)
 
     pygame.display.set_caption("Alien Invasion!!!")
 
