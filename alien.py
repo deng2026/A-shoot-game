@@ -20,6 +20,8 @@ class Alien(Sprite):
         self.x = float(self.rect.x)
         self.y = float(self.rect.y)
 
+        self.last_drop_time = 0  # 上次下降的时间
+
     def blitme(self):
         """Draw the alien at its current location."""
         self.screen.blit(self.image, self.rect)
@@ -35,5 +37,10 @@ class Alien(Sprite):
         """Move the alien to the right."""
         self.x += self.settings.alien_speed_factor * self.settings.fleet_direction
         self.rect.x = self.x
-
-    
+        
+        current_time = pygame.time.get_ticks()
+        # 检查是否到了下降时间
+        if  current_time - self.last_drop_time > self.settings.alien_drop_interval:
+            # 执行下降操作
+            self.rect.y += self.settings.fleet_drop_speed
+            self.last_drop_time = current_time  # 重置计时器
