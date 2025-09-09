@@ -1,0 +1,14 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Other common Python ignores (可选但推荐)
+# 如果你使用虚拟环境，请取消下一行的注释（删除开头的#）
+# venv/
+
+# IDE specific files (可选但推荐)
+.vscode/
+.idea/
+*.swp
+*.swo
